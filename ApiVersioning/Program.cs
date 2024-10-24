@@ -15,7 +15,7 @@ namespace ApiVersioning
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddSingleton<List<Student>>();
             builder.Services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
@@ -29,11 +29,11 @@ namespace ApiVersioning
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-                options.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "v2" });
-            });
+            //builder.Services.AddSwaggerGen(options =>
+            //{
+            //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            //    options.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "v2" });
+            //});
 
             var app = builder.Build();
 
