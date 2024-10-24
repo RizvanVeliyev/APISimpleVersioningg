@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.OpenApi.Models;
 
 namespace ApiVersioning
@@ -15,25 +16,24 @@ namespace ApiVersioning
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
             builder.Services.AddSingleton<List<Student>>();
             builder.Services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.ReportApiVersions = true;
-                options.ApiVersionReader = ApiVersionReader.Combine(
-                    new QueryStringApiVersionReader("api-version")
-                    );
+                //options.ApiVersionReader = ApiVersionReader.Combine(
+                //    new QueryStringApiVersionReader("api-version"),
+                //                                    new HeaderApiVersionReader("x-api-version"),
+                //                                    new MediaTypeApiVersionReader("x-api-version")
+                //    );
             }).AddApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-            //builder.Services.AddSwaggerGen(options =>
-            //{
-            //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-            //    options.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "v2" });
-            //});
+
 
             var app = builder.Build();
 
@@ -41,8 +41,17 @@ namespace ApiVersioning
             if (app.Environment.IsDevelopment())
             {
 
+                var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant());
+                    }
+                });
             }
 
             app.UseHttpsRedirection();

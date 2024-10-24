@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiVersioning.Controllers;
+namespace ApiVersioning.Controllers.V2;
 
 [ValidateApiVersion]
-[ApiVersion("1.0")]
+//[ApiVersion("1.0")]
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[Controller]")]
 [ApiController]
@@ -22,16 +22,17 @@ public class StudentController : ControllerBase
 
     }
 
-    [MapToApiVersion("1.0")]
-    [HttpGet("GetStudents")]
-    public IActionResult GetStudentsV1()
-    {
-        return Ok(Students.Take(2));
-    }
+    //[MapToApiVersion("1.0")]
+    //[HttpGet("GetStudents")]
+    //public IActionResult GetStudentsV1()
+    //{
+    //    return Ok(Students.Take(2));
+    //}
     [MapToApiVersion("2.0")]
     [HttpGet("GetStudents")]
-    public IActionResult GetStudentsV2()
+    public IActionResult GetStudents()
     {
         return Ok(Students.Skip(2).Take(2));
     }
+
 }
