@@ -28,6 +28,9 @@ namespace ApiVersioning
                 //                                    new HeaderApiVersionReader("x-api-version"),
                 //                                    new MediaTypeApiVersionReader("x-api-version")
                 //    );
+
+
+                ////Muellim bunu kommente aldim cunki artiq sag ustden versiyani sece bilirsense versiyani url de gondermeyin menasi qalmir
             }).AddApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
